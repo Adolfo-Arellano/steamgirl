@@ -1,0 +1,47 @@
+@import "tailwindcss";
+
+@theme {
+  /* ---------- Brand colors (STEAM Girls Brand Book) ---------- */
+  --color-cobalto: #2b43d5;
+  --color-indigo: #25166e;
+  --color-rosa: #ff80c6;
+  --color-menta: #2bd59f;
+  --color-lila: #d8b5ee;
+  --color-lavanda: #8e93cb;
+  --color-coral: #eb769c;
+  --color-rosavapor: #ffdbed;
+
+  --color-soft: #f8f3fb;
+  --color-gris-20: #e0e0e0;
+  --color-gris-50: #8a8d99;
+  --color-grafito: #30313d;
+  --color-techblack: #080a1d;
+
+  /* ---------- Type ---------- */
+  --font-display: "Sora", sans-serif;
+  --font-body: "Manrope", sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-soft);
+  color: var(--color-techblack);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Visible keyboard focus, kept consistent with brand colors */
+:focus-visible {
+  outline: 2px solid var(--color-cobalto);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

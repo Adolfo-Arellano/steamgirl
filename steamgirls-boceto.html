@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STEAM Girls — Boceto de plataforma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/iconfont/tabler-icons.min.css">
+<style>
+  :root{
+    --cobalto:#2B43D5;
+    --indigo:#25166E;
+    --rosa:#FF80C6;
+    --menta:#2BD59F;
+    --lila:#D8B5EE;
+    --lavanda:#8E93CB;
+    --coral:#EB769C;
+    --rosavapor:#FFDBED;
+    --blanco:#FFFFFF;
+    --soft:#F8F3FB;
+    --gris20:#E0E0E0;
+    --gris50:#8A8D99;
+    --grafito:#30313D;
+    --techblack:#080A1D;
+    --font-display:'Syne',sans-serif;
+    --font-body:'Manrope',sans-serif;
+    --font-mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:var(--font-body);
+    background:var(--soft);
+    color:var(--techblack);
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%; display:block;}
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer; border:none;}
+
+  /* ---------- NAV DE BOCETO (meta-navegación, no forma parte del producto) ---------- */
+  .proto-nav{
+    position:sticky; top:0; z-index:100;
+    background:var(--techblack);
+    display:flex; align-items:center; gap:2px;
+    padding:10px 16px;
+    overflow-x:auto;
+    font-family:var(--font-mono);
+  }
+  .proto-nav .label{
+    color:var(--gris50); font-size:11px; margin-right:10px; white-space:nowrap;
+  }
+  .proto-tab{
+    background:transparent; color:#B8BAC9;
+    padding:8px 14px; border-radius:20px; font-size:12px;
+    white-space:nowrap; transition:background .15s, color .15s;
+  }
+  .proto-tab:hover{background:rgba(255,255,255,0.08); color:#fff;}
+  .proto-tab.active{background:var(--menta); color:var(--indigo); font-weight:500;}
+  .screen{display:none;}
+  .screen.active{display:block;}
+
+  /* ---------- utilidades ---------- */
+  .wrap{max-width:1240px; margin:0 auto; padding:0 40px;}
+  .eyebrow{
+    font-family:var(--font-mono); font-size:12px; letter-spacing:0.02em;
+    color:var(--gris50);
+  }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:13px 26px; border-radius:100px;
+    font-weight:700; font-size:15px;
+    transition:transform .15s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--cobalto); color:#fff;}
+  .btn-accent{background:var(--rosa); color:var(--indigo);}
+  .btn-ghost{background:transparent; color:var(--indigo); border:1.5px solid var(--indigo);}
+  .btn-ghost-light{background:transparent; color:#fff; border:1.5px solid rgba(255,255,255,0.5);}
+
+  h1,h2,h3{font-family:var(--font-display); font-weight:800; line-height:1.05; letter-spacing:-0.01em;}
+
+  /* ---------- SITE NAV ---------- */
+  .site-nav{
+    background:var(--soft);
+    padding:22px 0;
+    border-bottom:1px solid rgba(8,10,29,0.08);
+  }
+  .site-nav .wrap{display:flex; align-items:center; justify-content:space-between;}
+  .logo{font-family:var(--font-display); font-weight:800; font-size:22px; color:var(--cobalto); display:flex; align-items:center; gap:2px;}
+  .logo .dot{color:var(--rosa);}
+  .nav-links{display:flex; gap:36px; font-weight:600; font-size:15px;}
+  .nav-links a{opacity:0.75; transition:opacity .15s;}
+  .nav-links a:hover{opacity:1;}
+  .nav-actions{display:flex; gap:12px; align-items:center;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--indigo);
+    position:relative;
+    overflow:hidden;
+    padding:90px 0 110px;
+  }
+  .hero .wrap{position:relative; z-index:2; display:grid; grid-template-columns:1.1fr 0.9fr; gap:40px; align-items:center;}
+  .hero-ribbon{
+    position:absolute; top:-140px; right:-120px; width:520px; height:520px;
+    border-radius:50%;
+    background:conic-gradient(from 180deg, var(--rosa), var(--menta), var(--cobalto), var(--rosa));
+    opacity:0.18; filter:blur(2px);
+  }
+  .hero-eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--font-mono); font-size:12px; color:var(--menta);
+    background:rgba(43,213,159,0.12); border:1px solid rgba(43,213,159,0.3);
+    padding:7px 14px; border-radius:100px; margin-bottom:26px;
+  }
+  .hero h1{color:#fff; font-size:58px; margin-bottom:22px;}
+  .hero h1 span{color:var(--rosa);}
+  .hero p{color:#C8C9E8; font-size:18px; line-height:1.6; max-width:480px; margin-bottom:34px;}
+  .hero-actions{display:flex; gap:14px;}
+  .hero-stats{display:flex; gap:34px; margin-top:52px;}
+  .hero-stat b{font-family:var(--font-display); font-size:30px; color:#fff; display:block;}
+  .hero-stat span{font-size:13px; color:#9A9CC4;}
+
+  .hero-visual{position:relative; height:440px;}
+  .hv-card{
+    position:absolute; background:#fff; border-radius:20px; padding:16px;
+    box-shadow:0 24px 50px rgba(0,0,0,0.25);
+  }
+  .hv-photo{width:270px; height:340px; border-radius:20px; top:10px; left:60px; overflow:hidden;}
+  .hv-photo img{width:100%; height:100%; object-fit:cover;}
+  .hv-badge{
+    width:190px; padding:18px; top:40px; right:0; z-index:3;
+    background:var(--rosa);
+  }
+  .hv-badge b{font-family:var(--font-display); font-size:26px; color:var(--indigo); display:block;}
+  .hv-badge span{font-size:12px; color:#7A1B45; font-weight:600;}
+  .hv-event{
+    width:220px; padding:16px; bottom:0; right:20px; z-index:3;
+  }
+  .hv-event .tag{
+    display:inline-block; font-family:var(--font-mono); font-size:10px;
+    background:var(--menta); color:var(--indigo); padding:4px 9px; border-radius:5px; margin-bottom:8px;
+  }
+  .hv-event b{font-size:14px; display:block; margin-bottom:4px;}
+  .hv-event span{font-size:12px; color:var(--gris50);}
+  .hv-dot{
+    position:absolute; width:14px; height:14px; border-radius:50%;
+    background:var(--menta); top:0; left:20px; z-index:4;
+    box-shadow:0 0 0 6px rgba(43,213,159,0.2);
+  }
+
+  /* ---------- SECTION SHELL ---------- */
+  section{padding:96px 0;}
+  .section-head{max-width:640px; margin-bottom:56px;}
+  .section-head .eyebrow{color:var(--cobalto); font-weight:600; margin-bottom:14px; display:block;}
+  .section-head h2{font-size:38px; color:var(--techblack); margin-bottom:16px;}
+  .section-head p{font-size:17px; color:var(--gris50); line-height:1.65;}
+
+  /* ---------- SOBRE NOSOTROS ---------- */
+  .about{background:#fff;}
+  .about-grid{display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start;}
+  .about-text p{font-size:17px; line-height:1.75; color:var(--grafito); margin-bottom:20px;}
+  .value-list{display:flex; flex-direction:column; gap:0; margin-top:32px;}
+  .value-item{
+    display:flex; gap:18px; padding:20px 0;
+    border-top:1px solid var(--gris20);
+  }
+  .value-item:last-child{border-bottom:1px solid var(--gris20);}
+  .value-num{font-family:var(--font-mono); font-size:13px; color:var(--rosa); min-width:28px; padding-top:2px;}
+  .value-item b{display:block; font-size:16px; margin-bottom:4px;}
+  .value-item span{font-size:14px; color:var(--gris50);}
+
+  .about-photos{position:relative; height:520px;}
+  .ap{position:absolute; border-radius:18px; overflow:hidden; box-shadow:0 20px 40px rgba(0,0,0,0.12);}
+  .ap img{width:100%; height:100%; object-fit:cover;}
+  .ap1{width:280px; height:340px; top:0; right:40px;}
+  .ap2{width:200px; height:230px; bottom:0; left:0; border:6px solid #fff;}
+  .ap-shape{
+    position:absolute; width:130px; height:130px; border-radius:50%;
+    background:var(--lila); top:200px; left:150px; z-index:-1;
+  }
+
+  /* ---------- MISION VISION VALORES ---------- */
+  .pillars{background:var(--soft);}
+  .pillars-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .pillar{
+    background:#fff; border-radius:20px; padding:36px 30px;
+    border:1px solid var(--gris20);
+  }
+  .pillar-icon{
+    width:48px; height:48px; border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-display); font-weight:800; font-size:18px;
+    color:#fff; margin-bottom:22px;
+  }
+  .pillar h3{font-size:20px; margin-bottom:12px; color:var(--techblack);}
+  .pillar p{font-size:14.5px; color:var(--gris50); line-height:1.6;}
+
+  /* ---------- NOVEDADES / OPORTUNIDADES ---------- */
+  .novedades{background:#fff;}
+  .nov-tabs{display:flex; gap:10px; margin-bottom:36px;}
+  .nov-tab{
+    padding:9px 18px; border-radius:100px; font-size:13.5px; font-weight:600;
+    border:1px solid var(--gris20); color:var(--gris50);
+  }
+  .nov-tab.on{background:var(--indigo); color:#fff; border-color:var(--indigo);}
+  .nov-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .nov-card{
+    border-radius:18px; overflow:hidden; position:relative; height:280px;
+    display:flex; flex-direction:column; justify-content:space-between;
+    padding:22px; color:#fff;
+  }
+  .nov-card.c1{background:var(--cobalto);}
+  .nov-card.c2{background:var(--menta); color:var(--indigo);}
+  .nov-card.c3{background:var(--indigo);}
+  .nov-tag{
+    align-self:flex-start; font-family:var(--font-mono); font-size:10px;
+    background:rgba(255,255,255,0.2); padding:5px 10px; border-radius:6px;
+  }
+  .nov-card.c2 .nov-tag{background:rgba(37,22,110,0.15); color:var(--indigo);}
+  .nov-card h4{font-family:var(--font-display); font-weight:800; font-size:21px; line-height:1.15; margin-bottom:6px;}
+  .nov-meta{font-size:12.5px; opacity:0.8; display:flex; align-items:center; gap:8px;}
+
+  /* ---------- EQUIPO ---------- */
+  .team{background:var(--soft);}
+  .team-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:26px;}
+  .team-card{background:#fff; border-radius:18px; overflow:hidden; border:1px solid var(--gris20);}
+  .team-photo{height:210px; overflow:hidden;}
+  .team-photo img{width:100%; height:100%; object-fit:cover;}
+  .team-info{padding:20px;}
+  .team-info b{display:block; font-size:16px; margin-bottom:3px;}
+  .team-role{
+    font-family:var(--font-mono); font-size:10.5px; color:var(--rosa);
+    text-transform:none; margin-bottom:10px; display:block;
+  }
+  .team-info p{font-size:13px; color:var(--gris50); line-height:1.55;}
+
+  /* ---------- REDES ---------- */
+  .social{background:var(--rosa); position:relative; overflow:hidden;}
+  .social-ring{
+    position:absolute; width:520px; height:520px; border-radius:50%;
+    border:70px solid rgba(255,255,255,0.15); top:-220px; left:-180px;
+  }
+  .social .wrap{position:relative; z-index:2;}
+  .social-head{max-width:560px; margin-bottom:48px;}
+  .social-head .eyebrow{color:var(--indigo); opacity:0.7;}
+  .social-head h2{color:var(--indigo); font-size:36px; margin-top:14px;}
+  .social-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:22px;}
+  .social-card{
+    background:var(--indigo); border-radius:20px; padding:28px;
+    display:flex; flex-direction:column; gap:40px; min-height:200px;
+    transition:transform .18s ease;
+  }
+  .social-card:hover{transform:translateY(-4px);}
+  .social-icon{width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; color:#fff; font-family:var(--font-display); font-weight:800;}
+  .social-card b{color:#fff; font-size:18px; display:block; margin-bottom:4px;}
+  .social-card span{color:#B8BAE8; font-size:13.5px;}
+
+  /* ---------- CTA ---------- */
+  .cta-final{background:var(--techblack); text-align:center; padding:110px 0;}
+  .cta-final .eyebrow{color:var(--menta); display:block; margin-bottom:20px;}
+  .cta-final h2{color:#fff; font-size:44px; max-width:640px; margin:0 auto 30px;}
+  .cta-final p{color:#9A9CC4; font-size:17px; margin-bottom:38px;}
+  .subscribe-form{display:flex; gap:10px; max-width:440px; margin:0 auto;}
+  .subscribe-form input{
+    flex:1; padding:14px 18px; border-radius:100px; border:1.5px solid rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.06); color:#fff; font-family:var(--font-body); font-size:15px;
+  }
+  .subscribe-form input::placeholder{color:#7678A8;}
+  .subscribe-form input:focus{outline:none; border-color:var(--menta);}
+  .subscribe-note{font-size:12.5px; color:#7678A8; margin-top:16px;}
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--indigo); padding:64px 0 30px;}
+  .footer-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; padding-bottom:48px; border-bottom:1px solid rgba(255,255,255,0.1);}
+  .footer-brand .logo{color:#fff; margin-bottom:14px;}
+  .footer-brand p{color:#9A9CC4; font-size:14px; line-height:1.6; max-width:260px;}
+  .footer-col b{color:#fff; font-size:13px; display:block; margin-bottom:16px; font-family:var(--font-mono); font-weight:400;}
+  .footer-col a{display:block; color:#B8BAE8; font-size:14px; margin-bottom:11px;}
+  .footer-bottom{display:flex; justify-content:space-between; padding-top:24px; font-size:13px; color:#7678A8;}
+
+  /* ---------- AUTH ---------- */
+  .auth-shell{min-height:100vh; display:grid; grid-template-columns:1fr 1fr;}
+  .auth-visual{
+    position:relative; background:var(--indigo); overflow:hidden;
+    display:flex; flex-direction:column; justify-content:flex-end; padding:48px;
+  }
+  .auth-slides{position:absolute; inset:0;}
+  .auth-slide{
+    position:absolute; inset:0; opacity:0; transition:opacity .6s ease;
+  }
+  .auth-slide.on{opacity:1;}
+  .auth-slide img{width:100%; height:100%; object-fit:cover;}
+  .auth-slide::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(0deg, rgba(37,22,110,0.92) 0%, rgba(37,22,110,0.15) 55%);
+  }
+  .auth-visual-content{position:relative; z-index:2;}
+  .auth-visual-content .logo{color:#fff; font-size:26px; position:absolute; top:-400px; left:0;}
+  .auth-quote{font-family:var(--font-display); font-weight:800; font-size:30px; color:#fff; line-height:1.2; margin-bottom:16px; max-width:420px;}
+  .auth-dots{display:flex; gap:8px; margin-top:24px;}
+  .auth-dot{width:24px; height:4px; border-radius:4px; background:rgba(255,255,255,0.25); transition:background .3s;}
+  .auth-dot.on{background:var(--menta);}
+  .auth-topbar{position:absolute; top:40px; left:48px; z-index:3;}
+
+  .auth-form-side{display:flex; flex-direction:column; justify-content:center; padding:60px 90px; position:relative;}
+  .auth-back{position:absolute; top:40px; left:48px; font-size:14px; font-weight:600; color:var(--gris50); display:flex; align-items:center; gap:6px;}
+  .auth-form-side .logo{color:var(--cobalto); font-size:22px; margin-bottom:44px;}
+  .auth-toggle{display:flex; background:var(--soft); border-radius:100px; padding:4px; margin-bottom:36px; width:fit-content;}
+  .auth-toggle button{padding:9px 22px; border-radius:100px; font-size:14px; font-weight:600; color:var(--gris50); background:transparent;}
+  .auth-toggle button.on{background:var(--cobalto); color:#fff;}
+  .auth-form-side h2{font-size:30px; margin-bottom:10px;}
+  .auth-form-side > p.sub{color:var(--gris50); font-size:15px; margin-bottom:32px;}
+  .field{margin-bottom:18px;}
+  .field label{display:block; font-size:13px; font-weight:600; margin-bottom:7px; color:var(--grafito);}
+  .field input, .field select{
+    width:100%; padding:13px 16px; border-radius:12px; border:1.5px solid var(--gris20);
+    font-family:var(--font-body); font-size:15px; background:#fff;
+  }
+  .field input:focus, .field select:focus{outline:none; border-color:var(--cobalto);}
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .auth-submit{width:100%; justify-content:center; margin-top:8px; font-size:15px;}
+  .auth-alt{text-align:center; margin-top:24px; font-size:14px; color:var(--gris50);}
+  .auth-alt a{color:var(--cobalto); font-weight:600;}
+  .auth-divider{display:flex; align-items:center; gap:14px; margin:26px 0; color:var(--gris50); font-size:13px;}
+  .auth-divider::before, .auth-divider::after{content:""; flex:1; height:1px; background:var(--gris20);}
+  .auth-social-btn{
+    width:100%; padding:12px; border-radius:12px; border:1.5px solid var(--gris20);
+    display:flex; align-items:center; justify-content:center; gap:10px; font-weight:600; font-size:14px; background:#fff;
+  }
+  .form-fields-panel{display:none;}
+  .form-fields-panel.on{display:block;}
+
+  /* ---------- APP SHELL (admin + dashboard) ---------- */
+  .app-shell{display:grid; grid-template-columns:260px 1fr; min-height:100vh; background:var(--soft);}
+  .app-sidebar{
+    background:var(--indigo); padding:28px 20px; display:flex; flex-direction:column;
+  }
+  .app-sidebar .logo{color:#fff; font-size:20px; margin-bottom:40px; padding:0 8px;}
+  .app-nav{display:flex; flex-direction:column; gap:4px;}
+  .app-nav a{
+    display:flex; align-items:center; gap:12px; padding:11px 14px; border-radius:12px;
+    color:#B8BAE8; font-size:14.5px; font-weight:600;
+  }
+  .app-nav a i{font-size:18px;}
+  .app-nav a.on{background:rgba(255,255,255,0.1); color:#fff;}
+  .app-nav a:hover{color:#fff;}
+  .app-sidebar-foot{margin-top:auto; padding-top:20px; border-top:1px solid rgba(255,255,255,0.1);}
+  .sidebar-user{display:flex; align-items:center; gap:10px; padding:8px;}
+  .sidebar-avatar{width:36px; height:36px; border-radius:50%; overflow:hidden; flex-shrink:0;}
+  .sidebar-avatar img{width:100%; height:100%; object-fit:cover;}
+  .sidebar-user b{color:#fff; font-size:13.5px; display:block;}
+  .sidebar-user span{color:#8688B8; font-size:11.5px;}
+  .back-to-site{display:flex; align-items:center; gap:8px; color:#8688B8; font-size:13px; margin-top:14px; padding:0 8px;}
+
+  .app-main{padding:36px 44px;}
+  .app-header{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:32px;}
+  .app-header h1{font-size:28px; color:var(--techblack);}
+  .app-header p.sub{color:var(--gris50); font-size:14.5px; margin-top:6px;}
+
+  .app-metrics{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:36px;}
+  .metric-card{background:#fff; border:1px solid var(--gris20); border-radius:16px; padding:20px;}
+  .metric-card span.label{font-size:12.5px; color:var(--gris50); font-family:var(--font-mono);}
+  .metric-card b{font-family:var(--font-display); font-size:28px; display:block; margin-top:8px; color:var(--techblack);}
+  .metric-trend{font-size:12px; color:#0F6E56; font-weight:600; margin-top:4px; display:flex; align-items:center; gap:4px;}
+
+  .panel-card{background:#fff; border:1px solid var(--gris20); border-radius:18px; padding:26px; margin-bottom:24px;}
+  .panel-card-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;}
+  .panel-card-head h3{font-size:17px; font-family:var(--font-display); font-weight:800;}
+
+  .composer{border:1.5px dashed var(--gris20); border-radius:16px; padding:20px;}
+  .composer-types{display:flex; gap:8px; margin-bottom:16px;}
+  .comp-type{padding:8px 16px; border-radius:100px; font-size:13px; font-weight:600; border:1.5px solid var(--gris20); color:var(--gris50);}
+  .comp-type.on{background:var(--cobalto); border-color:var(--cobalto); color:#fff;}
+  .composer textarea{
+    width:100%; border:none; resize:none; font-family:var(--font-body); font-size:15px;
+    min-height:70px; outline:none; background:transparent;
+  }
+  .composer-foot{display:flex; justify-content:space-between; align-items:center; padding-top:14px; border-top:1px solid var(--gris20); margin-top:8px;}
+  .composer-tools{display:flex; gap:16px; color:var(--gris50); font-size:18px;}
+
+  .post-row{display:flex; gap:16px; padding:18px 0; border-top:1px solid var(--gris20);}
+  .post-row:first-child{border-top:none;}
+  .post-avatar{width:42px; height:42px; border-radius:12px; overflow:hidden; flex-shrink:0;}
+  .post-avatar img{width:100%; height:100%; object-fit:cover;}
+  .post-badge{
+    display:inline-block; font-family:var(--font-mono); font-size:10px; padding:4px 9px; border-radius:6px;
+    margin-bottom:8px;
+  }
+  .post-row .post-head{display:flex; justify-content:space-between; align-items:flex-start;}
+  .post-row b.name{font-size:14px;}
+  .post-row span.time{font-size:12.5px; color:var(--gris50);}
+  .post-row p.body{font-size:14.5px; color:var(--grafito); margin-top:4px; line-height:1.55;}
+  .post-stats{display:flex; gap:18px; margin-top:10px; font-size:12.5px; color:var(--gris50);}
+  .post-stats span{display:flex; align-items:center; gap:5px;}
+
+  .status-pill{font-size:11px; font-weight:600; padding:4px 10px; border-radius:100px;}
+  .status-pill.live{background:#EAF3DE; color:#3B6D11;}
+  .status-pill.draft{background:var(--gris20); color:var(--gris50);}
+
+  /* ---------- NEWSLETTER: portada + timeline de nodos ---------- */
+  .nl-page{background:var(--soft); min-height:100vh;}
+
+  .nl-hero{
+    background:var(--indigo); position:relative; overflow:hidden;
+    padding:64px 0 0;
+  }
+  .nl-hero-ring{
+    position:absolute; width:640px; height:640px; border-radius:50%;
+    border:90px solid rgba(255,128,198,0.08); top:-320px; right:-260px;
+  }
+  .nl-hero .wrap{position:relative; z-index:2;}
+  .nl-hero-top{display:flex; justify-content:space-between; align-items:center; margin-bottom:46px;}
+  .nl-hero-top .eyebrow{color:var(--menta);}
+  .nl-hero-top h1{color:#fff; font-size:32px; margin-top:10px; max-width:420px;}
+  .nl-subscribe-inline{display:flex; gap:8px;}
+  .nl-subscribe-inline input{
+    padding:11px 16px; border-radius:100px; border:1.5px solid rgba(255,255,255,0.2);
+    background:rgba(255,255,255,0.06); color:#fff; font-family:var(--font-body); font-size:13.5px; width:200px;
+  }
+  .nl-subscribe-inline input::placeholder{color:#7678A8;}
+
+  /* PORTADA DESTACADA */
+  .nl-featured{
+    display:grid; grid-template-columns:1fr 0.85fr; gap:0; align-items:stretch;
+    background:var(--cobalto); border-radius:28px 28px 0 0; overflow:hidden;
+    cursor:pointer; position:relative; margin-top:0;
+  }
+  .nl-featured-photo{position:relative; overflow:hidden; min-height:360px;}
+  .nl-featured-photo img{width:100%; height:100%; object-fit:cover; position:absolute; inset:0;}
+  .nl-featured-photo::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(100deg, var(--cobalto) 0%, rgba(43,67,213,0.15) 60%);
+  }
+  .nl-featured-copy{padding:44px 46px; display:flex; flex-direction:column; justify-content:center; color:#fff;}
+  .nl-featured-kicker{
+    display:inline-flex; align-items:center; gap:8px; align-self:flex-start;
+    font-family:var(--font-mono); font-size:11.5px; background:rgba(255,255,255,0.15);
+    padding:7px 14px; border-radius:100px; margin-bottom:20px;
+  }
+  .nl-featured-copy h2{font-size:30px; line-height:1.18; margin-bottom:16px;}
+  .nl-featured-copy p{font-size:14.5px; color:#D6DBF8; line-height:1.65; margin-bottom:26px;}
+  .nl-featured-foot{display:flex; align-items:center; gap:12px;}
+  .nl-featured-foot img{width:34px; height:34px; border-radius:50%; object-fit:cover;}
+  .nl-featured-foot b{font-size:13px; display:block;}
+  .nl-featured-foot span{font-size:12px; color:#B8BAE8;}
+
+  /* CHIPS DE CATEGORIA */
+  .nl-chips-bar{
+    background:#fff; padding:20px 0; border-radius:0 0 28px 28px;
+    display:flex; justify-content:center; gap:10px; box-shadow:0 12px 30px rgba(8,10,29,0.06);
+  }
+  .nl-chip{
+    display:flex; align-items:center; gap:8px; padding:10px 20px; border-radius:100px;
+    font-size:13.5px; font-weight:700; border:1.5px solid var(--gris20); color:var(--grafito);
+  }
+  .nl-chip .dot{width:8px; height:8px; border-radius:50%;}
+  .nl-chip.on{background:var(--techblack); border-color:var(--techblack); color:#fff;}
+  .nl-chip.on .dot{background:#fff;}
+
+  /* TIMELINE DE NODOS */
+  .nl-timeline-section{padding:76px 0 100px;}
+  .nl-timeline{position:relative; max-width:760px; margin:0 auto;}
+  .nl-timeline-path{
+    position:absolute; left:29px; top:10px; bottom:10px; width:3px;
+    background:linear-gradient(180deg, var(--cobalto), var(--rosa) 33%, var(--menta) 66%, var(--indigo));
+    border-radius:3px;
+  }
+  .nl-edition-label{
+    position:relative; padding-left:76px; margin:0 0 28px;
+    font-family:var(--font-mono); font-size:12px; color:var(--gris50);
+  }
+  .nl-edition-label:not(:first-child){margin-top:52px;}
+
+  .nl-node-item{position:relative; padding-left:76px; margin-bottom:34px; cursor:pointer;}
+  .nl-node-dot{
+    position:absolute; left:18px; top:6px; width:24px; height:24px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px;
+    box-shadow:0 0 0 6px var(--soft);
+    z-index:2;
+  }
+  .nl-node-card{
+    background:#fff; border:1px solid var(--gris20); border-radius:18px; padding:24px 26px;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .nl-node-item:hover .nl-node-card{transform:translateX(6px); border-color:var(--gris20);}
+  .nl-node-kicker{
+    display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:10.5px;
+    padding:5px 11px; border-radius:6px; margin-bottom:12px; font-weight:500;
+  }
+  .nl-node-card h3{font-family:var(--font-body); font-weight:700; font-size:18px; line-height:1.35; margin-bottom:8px;}
+  .nl-node-card p.excerpt{font-size:14px; color:var(--gris50); line-height:1.6; margin-bottom:16px;}
+  .nl-node-foot{display:flex; align-items:center; justify-content:space-between;}
+  .nl-node-author{display:flex; align-items:center; gap:9px;}
+  .nl-node-author img{width:26px; height:26px; border-radius:50%; object-fit:cover;}
+  .nl-node-author span{font-size:12.5px; font-weight:600; color:var(--grafito);}
+  .nl-node-meta{display:flex; gap:16px; font-size:12.5px; color:var(--gris50);}
+  .nl-node-meta span{display:flex; align-items:center; gap:5px;}
+
+  .nl-loadmore{display:flex; justify-content:center; margin-top:20px;}
+
+  /* CTA final del newsletter */
+  .nl-final{background:var(--techblack); padding:80px 0; text-align:center;}
+  .nl-final .eyebrow{color:var(--menta); display:block; margin-bottom:16px;}
+  .nl-final h2{color:#fff; font-size:32px; max-width:520px; margin:0 auto 28px;}
+  .nl-final .subscribe-form{margin:0 auto;}
+
+
+  /* ---------- DASHBOARD PERSONAL ---------- */
+  .profile-banner{
+    background:var(--cobalto); border-radius:20px; padding:32px; margin-bottom:28px;
+    display:flex; align-items:center; gap:22px; position:relative; overflow:hidden;
+  }
+  .profile-banner-ring{position:absolute; width:220px; height:220px; border-radius:50%; border:36px solid rgba(255,255,255,0.12); right:-70px; top:-90px;}
+  .profile-avatar{width:76px; height:76px; border-radius:50%; overflow:hidden; border:3px solid rgba(255,255,255,0.3); position:relative; z-index:2;}
+  .profile-avatar img{width:100%; height:100%; object-fit:cover;}
+  .profile-banner-text{position:relative; z-index:2; flex:1;}
+  .profile-banner-text h2{color:#fff; font-size:22px; margin-bottom:4px; font-family:var(--font-display); font-weight:800;}
+  .profile-banner-text span{color:#C9D4F5; font-size:13.5px;}
+  .profile-banner-tags{display:flex; gap:8px; margin-top:12px;}
+  .pb-tag{font-size:11.5px; background:rgba(255,255,255,0.15); color:#fff; padding:5px 12px; border-radius:100px;}
+
+  .dash-grid{display:grid; grid-template-columns:1.6fr 1fr; gap:24px;}
+
+  .settings-row{display:flex; justify-content:space-between; align-items:center; padding:16px 0; border-top:1px solid var(--gris20);}
+  .settings-row:first-child{border-top:none;}
+  .settings-row b{font-size:14px; display:block; margin-bottom:3px;}
+  .settings-row span{font-size:12.5px; color:var(--gris50);}
+
+  .toggle-switch{width:40px; height:22px; border-radius:100px; background:var(--gris20); position:relative; cursor:pointer;}
+  .toggle-switch.on{background:var(--menta);}
+  .toggle-switch::after{content:""; position:absolute; width:16px; height:16px; border-radius:50%; background:#fff; top:3px; left:3px; transition:left .15s;}
+  .toggle-switch.on::after{left:21px;}
+
+  .mini-list-item{display:flex; gap:12px; align-items:center; padding:12px 0; border-top:1px solid var(--gris20);}
+  .mini-list-item:first-child{border-top:none;}
+  .mli-icon{width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:16px;}
+  .mini-list-item b{font-size:13.5px; display:block;}
+  .mini-list-item span{font-size:12px; color:var(--gris50);}
+
+  .avatar-edit-wrap{display:flex; align-items:center; gap:16px; margin-bottom:22px;}
+  .avatar-edit-wrap img{width:64px; height:64px; border-radius:50%; object-fit:cover;}
+</style>
+</head>
+<body>
+
+<nav class="proto-nav" id="protoNav">
+  <span class="label">BOCETO /</span>
+  <button class="proto-tab active" data-screen="home">1. Home</button>
+  <button class="proto-tab" data-screen="foro">2. Newsletter</button>
+  <button class="proto-tab" data-screen="admin">3. Panel admin</button>
+</nav>
+
+<!-- ============================================================ -->
+<!-- SCREEN 1: HOME                                                -->
+<!-- ============================================================ -->
+<div class="screen active" id="screen-home">
+
+  <nav class="site-nav">
+    <div class="wrap">
+      <div class="logo">steamgirls<span class="dot">.</span></div>
+      <div class="nav-links">
+        <a href="#">Comunidad</a>
+        <a href="#">Eventos</a>
+        <a href="#">Oportunidades</a>
+        <a href="#">Nosotras</a>
+      </div>
+      <div class="nav-actions">
+        <button class="btn btn-primary" onclick="goTo('foro')">Ver newsletter</button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-ribbon"></div>
+    <div class="wrap">
+      <div class="hero-copy">
+        <div class="hero-eyebrow"><i class="ti ti-point-filled"></i> comunidad activa · buenos aires</div>
+        <h1>Crecer en <span>tecnología</span>, juntas.</h1>
+        <p>Una red que acompaña, conecta e impulsa a mujeres que trabajan en tecnología o buscan sus primeros pasos en el sector.</p>
+        <div class="hero-actions">
+          <button class="btn btn-accent" onclick="goTo('foro')">Leer el newsletter</button>
+          <button class="btn btn-ghost-light" onclick="goTo('foro')">Ver la comunidad</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><b>+850</b><span>suscriptas al newsletter</span></div>
+          <div class="hero-stat"><b>32</b><span>eventos realizados</span></div>
+          <div class="hero-stat"><b>+60</b><span>oportunidades compartidas</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hv-dot"></div>
+        <div class="hv-card hv-photo">
+          <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=500&q=80" alt="Encuentro de la comunidad STEAM Girls">
+        </div>
+        <div class="hv-card hv-badge">
+          <b>93%</b>
+          <span>encontró nuevas conexiones profesionales</span>
+        </div>
+        <div class="hv-card hv-event">
+          <span class="tag">evento_09</span>
+          <b>Data Saturday</b>
+          <span>05.09 · Buenos Aires</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="about">
+    <div class="wrap">
+      <div class="about-grid">
+        <div class="about-text">
+          <span class="eyebrow" style="color:var(--cobalto); font-weight:600; display:block; margin-bottom:14px;">sobre nosotras</span>
+          <h2 style="font-size:34px; margin-bottom:20px;">Una comunidad, no una plataforma más</h2>
+          <p>STEAM Girls nació de un grupo de mujeres que empezó a encontrarse en eventos de tecnología. Esos encuentros se transformaron en vínculos, amistad y una comunidad creada para acompañarse y crecer juntas dentro del ecosistema tecnológico.</p>
+          <p>Hoy somos una red abierta a mujeres en cualquier etapa: estudiando, dando sus primeros pasos o ya trabajando en el sector.</p>
+          <div class="value-list">
+            <div class="value-item">
+              <span class="value-num">01</span>
+              <div><b>Acompañamiento real</b><span>Espacios seguros de intercambio y contención entre pares.</span></div>
+            </div>
+            <div class="value-item">
+              <span class="value-num">02</span>
+              <div><b>Oportunidades concretas</b><span>Compartimos recursos, herramientas y ofertas laborales verificadas.</span></div>
+            </div>
+            <div class="value-item">
+              <span class="value-num">03</span>
+              <div><b>Visibilidad</b><span>Amplificamos las voces, los proyectos y el talento de nuestras integrantes.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="about-photos">
+          <div class="ap-shape"></div>
+          <div class="ap ap1"><img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=500&q=80" alt="Mujeres en un encuentro de tecnología"></div>
+          <div class="ap ap2"><img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?w=500&q=80" alt="Mujeres presentando en un evento tech"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="pillars">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">misión, visión y propósito</span>
+        <h2>Ninguna transita sola su camino</h2>
+      </div>
+      <div class="pillars-grid">
+        <div class="pillar">
+          <div class="pillar-icon" style="background:var(--cobalto);">M</div>
+          <h3>Misión</h3>
+          <p>Creamos espacios seguros de intercambio, contención y aprendizaje. Compartimos herramientas, recursos y oportunidades para el desarrollo profesional.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon" style="background:var(--rosa); color:var(--indigo);">V</div>
+          <h3>Visión</h3>
+          <p>Ser una comunidad referente para mujeres en tecnología, donde ninguna tenga que transitar sola su formación, inserción o crecimiento profesional.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-icon" style="background:var(--menta); color:var(--indigo);">P</div>
+          <h3>Propósito</h3>
+          <p>Acompañar, conectar y ser una red de sostén para las mujeres del mundo IT, impulsando su desarrollo en una industria donde su participación es menor.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="novedades">
+    <div class="wrap">
+      <div class="section-head" style="display:flex; align-items:flex-end; justify-content:space-between; max-width:none;">
+        <div>
+          <span class="eyebrow">actividad reciente</span>
+          <h2>Novedades de la comunidad</h2>
+        </div>
+      </div>
+      <div class="nov-tabs">
+        <div class="nov-tab on">Todo</div>
+        <div class="nov-tab">Eventos</div>
+        <div class="nov-tab">Oportunidades</div>
+        <div class="nov-tab">Recaps</div>
+      </div>
+      <div class="nov-grid">
+        <div class="nov-card c1">
+          <span class="nov-tag">evento_01</span>
+          <div>
+            <h4>Próximo evento: Data Saturday</h4>
+            <div class="nov-meta"><i class="ti ti-calendar"></i> 05.09 · Buenos Aires</div>
+          </div>
+        </div>
+        <div class="nov-card c2">
+          <span class="nov-tag">oportunidad tech</span>
+          <div>
+            <h4>Data Analyst Jr. — búsqueda abierta</h4>
+            <div class="nov-meta"><i class="ti ti-briefcase"></i> Publicado por Sofía Ramírez</div>
+          </div>
+        </div>
+        <div class="nov-card c3">
+          <span class="nov-tag">recap</span>
+          <div>
+            <h4>Así vivimos el último Data Saturday</h4>
+            <div class="nov-meta"><i class="ti ti-photo"></i> 24 fotos · 4 charlas</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="team">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">quiénes están detrás</span>
+        <h2>El equipo que sostiene la comunidad</h2>
+      </div>
+      <div class="team-grid">
+        <div class="team-card">
+          <div class="team-photo"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=300&q=80" alt="Florencia Ysaguirre"></div>
+          <div class="team-info">
+            <b>Florencia Ysaguirre</b>
+            <span class="team-role">fundadora & dirección de marca</span>
+            <p>Lidera la visión de comunidad y la identidad de STEAM Girls.</p>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-photo"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&q=80" alt="Integrante del equipo"></div>
+          <div class="team-info">
+            <b>Sofía Ramírez</b>
+            <span class="team-role">alianzas y oportunidades</span>
+            <p>Conecta a la comunidad con empresas y búsquedas laborales.</p>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-photo"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=300&q=80" alt="Integrante del equipo"></div>
+          <div class="team-info">
+            <b>Camila Torres</b>
+            <span class="team-role">eventos y experiencias</span>
+            <p>Diseña los encuentros presenciales y virtuales de la comunidad.</p>
+          </div>
+        </div>
+        <div class="team-card">
+          <div class="team-photo"><img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=300&q=80" alt="Integrante del equipo"></div>
+          <div class="team-info">
+            <b>Valentina Ruiz</b>
+            <span class="team-role">contenido y comunidad digital</span>
+            <p>Modera el foro y acompaña las conversaciones de la comunidad.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="social">
+    <div class="social-ring"></div>
+    <div class="wrap">
+      <div class="social-head">
+        <span class="eyebrow">seguinos</span>
+        <h2>La conversación sigue en redes</h2>
+      </div>
+      <div class="social-grid">
+        <a class="social-card" href="#">
+          <div class="social-icon"><i class="ti ti-brand-instagram"></i></div>
+          <div><b>@steamgirlsclub</b><span>Instagram · +12k seguidoras</span></div>
+        </a>
+        <a class="social-card" href="#">
+          <div class="social-icon"><i class="ti ti-brand-tiktok"></i></div>
+          <div><b>@steamgirlsclub</b><span>TikTok · contenido y recaps de eventos</span></div>
+        </a>
+        <a class="social-card" href="#">
+          <div class="social-icon"><i class="ti ti-brand-x"></i></div>
+          <div><b>@steamgirlsclub</b><span>X (Twitter) · novedades y oportunidades</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-final">
+    <div class="wrap">
+      <span class="eyebrow">sumate</span>
+      <h2>Recibí el newsletter directo en tu correo</h2>
+      <p>Eventos, oportunidades e investigaciones de la comunidad, sin necesidad de crear una cuenta.</p>
+      <form class="subscribe-form" onsubmit="event.preventDefault();">
+        <input type="email" placeholder="tu@email.com" required>
+        <button class="btn btn-accent" type="submit">Suscribirme</button>
+      </form>
+      <p class="subscribe-note">Sin spam. Podés darte de baja cuando quieras.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo">steamgirls<span class="dot">.</span></div>
+          <p>Una comunidad de mujeres que forman parte del ecosistema tecnológico o buscan incorporarse a él.</p>
+        </div>
+        <div class="footer-col">
+          <b>COMUNIDAD</b>
+          <a href="#">Foro</a>
+          <a href="#">Eventos</a>
+          <a href="#">Oportunidades</a>
+        </div>
+        <div class="footer-col">
+          <b>SOBRE NOSOTRAS</b>
+          <a href="#">Quiénes somos</a>
+          <a href="#">El equipo</a>
+          <a href="#">Contacto</a>
+        </div>
+        <div class="footer-col">
+          <b>SEGUINOS</b>
+          <a href="#">Instagram</a>
+          <a href="#">TikTok</a>
+          <a href="#">X (Twitter)</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 STEAM Girls. Crecer en tecnología, juntas.</span>
+        <span>@steamgirlsclub</span>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 3: PANEL ADMIN                                         -->
+<!-- ============================================================ -->
+<div class="screen" id="screen-admin">
+  <div class="app-shell">
+
+    <aside class="app-sidebar">
+      <div class="logo">steamgirls<span class="dot" style="color:var(--rosa);">.</span></div>
+      <nav class="app-nav">
+        <a class="on"><i class="ti ti-layout-grid"></i> Panel general</a>
+        <a><i class="ti ti-speakerphone"></i> Novedades</a>
+        <a><i class="ti ti-calendar-event"></i> Eventos</a>
+        <a><i class="ti ti-briefcase"></i> Oportunidades</a>
+        <a><i class="ti ti-mail"></i> Suscriptas</a>
+        <a><i class="ti ti-message-2"></i> Moderación de comentarios</a>
+      </nav>
+      <div class="app-sidebar-foot">
+        <div class="sidebar-user">
+          <div class="sidebar-avatar"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&q=80" alt="Florencia"></div>
+          <div><b>Florencia Y.</b><span>Administradora</span></div>
+        </div>
+        <a class="back-to-site" onclick="goTo('home')" style="cursor:pointer;"><i class="ti ti-arrow-left"></i> Volver al sitio</a>
+      </div>
+    </aside>
+
+    <main class="app-main">
+      <div class="app-header">
+        <div>
+          <h1>Panel de novedades</h1>
+          <p class="sub">Publicá eventos, oportunidades y recaps para toda la comunidad.</p>
+        </div>
+        <button class="btn btn-primary"><i class="ti ti-plus"></i> Nueva publicación</button>
+      </div>
+
+      <div class="app-metrics">
+        <div class="metric-card">
+          <span class="label">SUSCRIPTAS AL NEWSLETTER</span>
+          <b>850</b>
+          <div class="metric-trend"><i class="ti ti-arrow-up-right"></i> +34 este mes</div>
+        </div>
+        <div class="metric-card">
+          <span class="label">PUBLICACIONES DEL MES</span>
+          <b>12</b>
+          <div class="metric-trend"><i class="ti ti-arrow-up-right"></i> +3 vs. mes anterior</div>
+        </div>
+        <div class="metric-card">
+          <span class="label">PRÓXIMO EVENTO</span>
+          <b style="font-size:18px;">Data Saturday</b>
+          <div class="metric-trend" style="color:var(--gris50);">05.09 · 62 inscriptas</div>
+        </div>
+        <div class="metric-card">
+          <span class="label">COMENTARIOS PENDIENTES</span>
+          <b>3</b>
+          <div class="metric-trend" style="color:#854F0B;"><i class="ti ti-alert-circle"></i> por moderar</div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-card-head"><h3>Nueva publicación</h3></div>
+        <div class="composer">
+          <div class="composer-types">
+            <div class="comp-type on">Novedad</div>
+            <div class="comp-type">Evento</div>
+            <div class="comp-type">Oportunidad</div>
+            <div class="comp-type">Recap</div>
+          </div>
+          <textarea placeholder="¿Qué querés compartir con la comunidad hoy?"></textarea>
+          <div class="composer-foot">
+            <div class="composer-tools">
+              <i class="ti ti-photo"></i>
+              <i class="ti ti-calendar"></i>
+              <i class="ti ti-link"></i>
+            </div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-ghost" style="padding:9px 18px; font-size:13.5px;">Guardar borrador</button>
+              <button class="btn btn-primary" style="padding:9px 20px; font-size:13.5px;">Publicar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-card-head">
+          <h3>Publicaciones recientes</h3>
+          <a href="#" style="font-size:13.5px; font-weight:600; color:var(--cobalto);">Ver todas</a>
+        </div>
+
+        <div class="post-row">
+          <div class="post-avatar"><img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&q=80" alt="Florencia"></div>
+          <div style="flex:1;">
+            <div class="post-head">
+              <div>
+                <span class="post-badge" style="background:var(--cobalto); color:#fff;">EVENTO</span><br>
+                <b class="name">Próximo evento: Data Saturday</b>
+              </div>
+              <span class="status-pill live">Publicado</span>
+            </div>
+            <p class="body">Conectamos ideas, experiencias y mujeres que hacen tecnología. 05.09 en Buenos Aires — inscripción abierta.</p>
+            <div class="post-stats">
+              <span><i class="ti ti-eye"></i> 412 vistas</span>
+              <span><i class="ti ti-user-check"></i> 62 inscriptas</span>
+              <span class="time"><i class="ti ti-clock"></i> hace 2 días</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="post-row">
+          <div class="post-avatar"><img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80" alt="Sofía"></div>
+          <div style="flex:1;">
+            <div class="post-head">
+              <div>
+                <span class="post-badge" style="background:var(--menta); color:var(--indigo);">OPORTUNIDAD</span><br>
+                <b class="name">Data Analyst Jr. — búsqueda abierta</b>
+              </div>
+              <span class="status-pill live">Publicado</span>
+            </div>
+            <p class="body">Empresa partner busca perfil junior para su equipo de datos. Requisitos y postulación en el link.</p>
+            <div class="post-stats">
+              <span><i class="ti ti-eye"></i> 289 vistas</span>
+              <span><i class="ti ti-share"></i> 14 compartidas</span>
+              <span class="time"><i class="ti ti-clock"></i> hace 4 días</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="post-row">
+          <div class="post-avatar"><img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&q=80" alt="Camila"></div>
+          <div style="flex:1;">
+            <div class="post-head">
+              <div>
+                <span class="post-badge" style="background:var(--rosavapor); color:#993556;">RECAP</span><br>
+                <b class="name">Así vivimos el último meetup de IA</b>
+              </div>
+              <span class="status-pill draft">Borrador</span>
+            </div>
+            <p class="body">Galería de fotos y resumen de las charlas — falta agregar los links de los recursos compartidos.</p>
+            <div class="post-stats">
+              <span class="time"><i class="ti ti-clock"></i> editado hace 1 hora</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 4: NEWSLETTER (público, solo admins publican)          -->
+<!-- ============================================================ -->
+<div class="screen" id="screen-foro">
+  <div class="nl-page">
+
+    <nav class="site-nav" style="background:var(--indigo); border-bottom:none;">
+      <div class="wrap">
+        <div class="logo" style="color:#fff;">steamgirls<span class="dot" style="color:var(--rosa);">.</span></div>
+        <div class="nav-links">
+          <a style="color:#B8BAE8;" onclick="goTo('home')">Inicio</a>
+          <a style="color:#fff;">Newsletter</a>
+          <a style="color:#B8BAE8;">Eventos</a>
+        </div>
+        <div class="nav-actions">
+          <button class="btn btn-ghost-light" style="padding:9px 18px; font-size:13.5px;" onclick="toggleSubscribeBox()">Suscribirme</button>
+        </div>
+      </div>
+    </nav>
+
+    <div id="newsletterListView">
+
+      <header class="nl-hero">
+        <div class="nl-hero-ring"></div>
+        <div class="wrap">
+          <div class="nl-hero-top">
+            <div>
+              <span class="eyebrow">el newsletter de steam girls</span>
+              <h1>Lo que publican las administradoras, edición a edición</h1>
+            </div>
+            <div class="nl-subscribe-inline">
+              <input type="email" id="heroEmailInput" placeholder="tu@email.com">
+              <button class="btn btn-accent" style="padding:11px 20px; font-size:13.5px;">Suscribirme</button>
+            </div>
+          </div>
+
+          <!-- PORTADA DESTACADA -->
+          <div class="nl-featured" onclick="openPost()">
+            <div class="nl-featured-photo">
+              <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=800&q=80" alt="Data Saturday">
+            </div>
+            <div class="nl-featured-copy">
+              <span class="nl-featured-kicker"><i class="ti ti-point-filled"></i> edición_12 · evento destacado</span>
+              <h2>Próximo evento: Data Saturday, 05.09 en Buenos Aires</h2>
+              <p>Conectamos ideas, experiencias y mujeres que hacen tecnología. Inscripción abierta, cupos limitados.</p>
+              <div class="nl-featured-foot">
+                <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&q=80" alt="autora">
+                <div><b>Camila Torres · admin</b><span>hace 1 día · 31 comentarios</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CHIPS -->
+          <div class="nl-chips-bar">
+            <div class="nl-chip on"><span class="dot" style="background:var(--techblack);"></span> Todo</div>
+            <div class="nl-chip"><span class="dot" style="background:var(--cobalto);"></span> Eventos</div>
+            <div class="nl-chip"><span class="dot" style="background:var(--coral);"></span> Oportunidades</div>
+            <div class="nl-chip"><span class="dot" style="background:var(--amber, #BA7517);"></span> Recaps</div>
+            <div class="nl-chip"><span class="dot" style="background:var(--menta);"></span> Investigaciones</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- TIMELINE DE NODOS -->
+      <section class="nl-timeline-section">
+        <div class="wrap">
+          <div class="nl-timeline">
+            <div class="nl-timeline-path"></div>
+
+            <div class="nl-edition-label">edición_11 · esta semana</div>
+
+            <div class="nl-node-item" onclick="openPost()">
+              <div class="nl-node-dot" style="background:#E6F1FB;"><i class="ti ti-flask" style="color:#0C447C;"></i></div>
+              <div class="nl-node-card">
+                <span class="nl-node-kicker" style="background:#E6F1FB; color:#0C447C;">Investigación</span>
+                <h3>Comparamos 3 librerías de visualización de datos — ¿cuál conviene para portfolio?</h3>
+                <p class="excerpt">Analizamos Matplotlib, Plotly y Altair pensando en proyectos de portfolio junior. Dejamos los pros y contras que encontramos...</p>
+                <div class="nl-node-foot">
+                  <div class="nl-node-author">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80" alt="autora">
+                    <span>Valentina Ruiz · admin</span>
+                  </div>
+                  <div class="nl-node-meta">
+                    <span><i class="ti ti-message-circle"></i> 23</span>
+                    <span><i class="ti ti-clock"></i> hace 3 h</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="nl-node-item" onclick="openPost()">
+              <div class="nl-node-dot" style="background:var(--rosavapor);"><i class="ti ti-briefcase" style="color:#993556;"></i></div>
+              <div class="nl-node-card">
+                <span class="nl-node-kicker" style="background:var(--rosavapor); color:#993556;">Oportunidad</span>
+                <h3>Data Analyst Jr. — búsqueda abierta con empresa partner</h3>
+                <p class="excerpt">Compartimos una búsqueda para perfil junior de datos. Requisitos, rango horario y cómo postularte en el detalle...</p>
+                <div class="nl-node-foot">
+                  <div class="nl-node-author">
+                    <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&q=80" alt="autora">
+                    <span>Florencia Ysaguirre · admin</span>
+                  </div>
+                  <div class="nl-node-meta">
+                    <span><i class="ti ti-message-circle"></i> 12</span>
+                    <span><i class="ti ti-clock"></i> hace 6 h</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="nl-edition-label">edición_10 · semana pasada</div>
+
+            <div class="nl-node-item" onclick="openPost()">
+              <div class="nl-node-dot" style="background:var(--cobalto);"><i class="ti ti-calendar-event" style="color:#fff;"></i></div>
+              <div class="nl-node-card">
+                <span class="nl-node-kicker" style="background:#E6F1FB; color:#0C447C;">Evento</span>
+                <h3>Así fue el Meetup de Ciberseguridad: cupo completo</h3>
+                <p class="excerpt">Más de 80 personas se sumaron a la charla sobre pentesting y carrera profesional en seguridad ofensiva...</p>
+                <div class="nl-node-foot">
+                  <div class="nl-node-author">
+                    <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&q=80" alt="autora">
+                    <span>Camila Torres · admin</span>
+                  </div>
+                  <div class="nl-node-meta">
+                    <span><i class="ti ti-message-circle"></i> 31</span>
+                    <span><i class="ti ti-clock"></i> hace 1 día</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="nl-node-item" onclick="openPost()">
+              <div class="nl-node-dot" style="background:#FAEEDA;"><i class="ti ti-photo" style="color:#633806;"></i></div>
+              <div class="nl-node-card">
+                <span class="nl-node-kicker" style="background:#FAEEDA; color:#633806;">Recap</span>
+                <h3>Así vivimos el último meetup de Cloud & DevOps</h3>
+                <p class="excerpt">Resumen de las charlas, fotos del encuentro y los recursos que compartieron las speakers...</p>
+                <div class="nl-node-foot">
+                  <div class="nl-node-author">
+                    <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100&q=80" alt="autora">
+                    <span>Rocío Fernández · admin</span>
+                  </div>
+                  <div class="nl-node-meta">
+                    <span><i class="ti ti-message-circle"></i> 8</span>
+                    <span><i class="ti ti-clock"></i> hace 2 días</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="nl-node-item" onclick="openPost()" style="margin-bottom:0;">
+              <div class="nl-node-dot" style="background:var(--menta);"><i class="ti ti-bulb" style="color:var(--indigo);"></i></div>
+              <div class="nl-node-card">
+                <span class="nl-node-kicker" style="background:#EAF3DE; color:#3B6D11;">Investigación</span>
+                <h3>Guía rápida: certificación AWS Cloud Practitioner desde cero</h3>
+                <p class="excerpt">Armamos un resumen con los temas que más caen en el examen y recursos gratuitos para estudiar en 6 semanas...</p>
+                <div class="nl-node-foot">
+                  <div class="nl-node-author">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80" alt="autora">
+                    <span>Valentina Ruiz · admin</span>
+                  </div>
+                  <div class="nl-node-meta">
+                    <span><i class="ti ti-message-circle"></i> 19</span>
+                    <span><i class="ti ti-clock"></i> hace 5 días</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="nl-loadmore">
+            <button class="btn btn-ghost">Ver ediciones anteriores</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="nl-final">
+        <div class="wrap">
+          <span class="eyebrow">no te pierdas ninguna edición</span>
+          <h2>Recibí el newsletter directo en tu correo</h2>
+          <form class="subscribe-form" onsubmit="event.preventDefault();">
+            <input type="email" placeholder="tu@email.com" required>
+            <button class="btn btn-accent" type="submit">Suscribirme</button>
+          </form>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- DETALLE DE PUBLICACIÓN + COMENTARIOS SIN LOGIN -->
+    <div class="wrap" id="postDetail" style="display:none; padding-top:44px; padding-bottom:90px;">
+      <button class="btn btn-ghost" style="font-size:13px; padding:9px 16px; margin-bottom:24px;" onclick="closePost()"><i class="ti ti-arrow-left"></i> Volver al newsletter</button>
+
+      <div style="max-width:760px;">
+        <span class="nl-node-kicker" style="background:#E6F1FB; color:#0C447C;">Investigación</span>
+        <h1 style="font-size:32px; margin:14px 0 16px; line-height:1.2;">Comparamos 3 librerías de visualización de datos — ¿cuál conviene para portfolio?</h1>
+        <div class="nl-node-author" style="margin-bottom:28px;">
+          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80" alt="autora">
+          <span>Valentina Ruiz · admin · hace 3 h</span>
+        </div>
+
+        <div style="background:#fff; border:1px solid var(--gris20); border-radius:16px; padding:28px; font-size:15.5px; line-height:1.8; color:var(--grafito); margin-bottom:40px;">
+          <p style="margin-bottom:16px;">Analizamos Matplotlib, Plotly y Altair pensando en qué conviene mostrar en un proyecto de portfolio junior. Estas son nuestras conclusiones principales:</p>
+          <p style="margin-bottom:16px;"><b>Matplotlib</b> sigue siendo el estándar para gráficos estáticos rápidos, pero su curva de personalización es más alta.</p>
+          <p>Contanos en los comentarios cuál usás vos y por qué — nos encantaría sumar tu experiencia a la nota.</p>
+        </div>
+
+        <div class="panel-card" style="padding:26px;">
+          <div class="panel-card-head"><h3>32 comentarios</h3></div>
+
+          <div class="composer" style="border-style:solid; margin-bottom:24px;">
+            <div class="field-row" style="margin-bottom:12px;">
+              <div class="field" style="margin-bottom:0;">
+                <label>Tu nombre</label>
+                <input type="text" placeholder="Ej: Marina G.">
+              </div>
+            </div>
+            <textarea placeholder="Dejá tu comentario..." style="min-height:56px;"></textarea>
+            <div class="composer-foot" style="justify-content:flex-end;">
+              <button class="btn btn-primary" style="padding:9px 20px; font-size:13.5px;">Comentar</button>
+            </div>
+          </div>
+          <p style="font-size:12px; color:var(--gris50); margin:-14px 0 24px;">No hace falta crear una cuenta — solo tu nombre y tu comentario.</p>
+
+          <div class="post-row">
+            <div class="post-avatar" style="background:var(--lila); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; color:var(--indigo);">MG</div>
+            <div style="flex:1;">
+              <div class="post-head">
+                <b class="name">Marina G.</b>
+                <span class="time">hace 1 h</span>
+              </div>
+              <p class="body">¡Buenísimo el resumen! Yo uso Plotly para todo lo interactivo, la diferencia en presentaciones es enorme.</p>
+            </div>
+          </div>
+          <div class="post-row">
+            <div class="post-avatar" style="background:var(--menta); display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:800; color:var(--indigo);">CT</div>
+            <div style="flex:1;">
+              <div class="post-head">
+                <b class="name">Carla T.</b>
+                <span class="time">hace 2 h</span>
+              </div>
+              <p class="body">Coincido con Matplotlib para lo estático, pero para portfolio recomendaría mostrar al menos un gráfico interactivo.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.proto-tab');
+  const screens = document.querySelectorAll('.screen');
+  tabs.forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      tabs.forEach(t=>t.classList.remove('active'));
+      screens.forEach(s=>s.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById('screen-'+tab.dataset.screen).classList.add('active');
+      closePost();
+      window.scrollTo(0,0);
+    });
+  });
+
+  function goTo(screenName){
+    tabs.forEach(t=>t.classList.remove('active'));
+    screens.forEach(s=>s.classList.remove('active'));
+    document.querySelector('.proto-tab[data-screen="'+screenName+'"]').classList.add('active');
+    document.getElementById('screen-'+screenName).classList.add('active');
+    closePost();
+    window.scrollTo(0,0);
+  }
+
+  function openPost(){
+    const listView = document.getElementById('newsletterListView');
+    if(listView) listView.style.display = 'none';
+    const detail = document.getElementById('postDetail');
+    if(detail) detail.style.display = 'block';
+    window.scrollTo(0,0);
+  }
+  function closePost(){
+    const listView = document.getElementById('newsletterListView');
+    if(listView) listView.style.display = '';
+    const detail = document.getElementById('postDetail');
+    if(detail) detail.style.display = 'none';
+  }
+  function toggleSubscribeBox(){
+    const input = document.getElementById('heroEmailInput');
+    if(input) input.focus();
+  }
+
+  document.querySelectorAll('.toggle-switch').forEach(sw=>{
+    sw.addEventListener('click', ()=> sw.classList.toggle('on'));
+  });
+
+  document.querySelectorAll('.comp-type').forEach(ct=>{
+    ct.addEventListener('click', ()=>{
+      ct.parentElement.querySelectorAll('.comp-type').forEach(x=>x.classList.remove('on'));
+      ct.classList.add('on');
+    });
+  });
+
+  document.querySelectorAll('.nl-chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      chip.parentElement.querySelectorAll('.nl-chip').forEach(x=>x.classList.remove('on'));
+      chip.classList.add('on');
+    });
+  });
+
+  document.querySelectorAll('.nov-tab').forEach(nt=>{
+    nt.addEventListener('click', ()=>{
+      nt.parentElement.querySelectorAll('.nov-tab').forEach(x=>x.classList.remove('on'));
+      nt.classList.add('on');
+    });
+  });
+</script>
+
+</body>
+</html>
+
