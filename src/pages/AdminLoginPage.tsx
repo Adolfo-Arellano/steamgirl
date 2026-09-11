@@ -35,8 +35,17 @@ export function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-soft px-6">
-      <div className="w-full max-w-105">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-indigo px-6">
+      <div
+        className="pointer-events-none absolute -left-32 -top-32 h-100 w-100 rounded-full opacity-20 blur-sm"
+        style={{
+          background:
+            "conic-gradient(from 180deg, var(--color-rosa), var(--color-menta), var(--color-cobalto), var(--color-rosa))",
+        }}
+      />
+      <div className="pointer-events-none absolute -bottom-40 -right-40 h-120 w-120 rounded-full border-70 border-menta/10" />
+
+      <div className="relative z-10 w-full max-w-105 rounded-[28px] bg-white p-9 shadow-2xl sm:p-11">
         <Link
           to="/"
           className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-gris-50 hover:text-grafito"
